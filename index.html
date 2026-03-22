@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnSphere — Learn Without Limits</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  /* ══════════════════════════════════════
+     THEME TOKENS
+  ══════════════════════════════════════ */
+  :root, [data-theme="dark"] {
+    --bg:            #1c1c22;
+    --surface:       #24242c;
+    --card:          #2c2c36;
+    --card2:         #313140;
+    --border:        #3a3a48;
+    --border2:       #44445a;
+    --ink:           #f0eee8;
+    --ink-mid:       #b8b6c0;
+    --ink-soft:      #7a7888;
+    --accent:        #6c8fff;
+    --accent-soft:   rgba(108,143,255,.15);
+    --gold:          #f5c842;
+    --gold-soft:     rgba(245,200,66,.13);
+    --mint:          #3de0b8;
+    --mint-soft:     rgba(61,224,184,.13);
+    --rose:          #ff7096;
+    --rose-soft:     rgba(255,112,150,.13);
+    --shadow:        0 2px 24px rgba(0,0,0,.35);
+    --shadow-hover:  0 8px 40px rgba(0,0,0,.5);
+    --nav-bg:        rgba(28,28,34,0.92);
+    --radius:        18px;
+    --cta-bg:        #24242c;
+    --cert-user-bubble: var(--accent);
+    --cert-user-text:   white;
+  }
+
+  [data-theme="light"] {
+    --bg:            #faf8f4;
+    --surface:       #ffffff;
+    --card:          #ffffff;
+    --card2:         #f4f2ee;
+    --border:        #ede9e3;
+    --border2:       #dedad4;
+    --ink:           #1a1814;
+    --ink-mid:       #5a5650;
+    --ink-soft:      #9a9690;
+    --accent:        #4f7cff;
+    --accent-soft:   rgba(79,124,255,.1);
+    --gold:          #e09800;
+    --gold-soft:     rgba(224,152,0,.1);
+    --mint:          #00a885;
+    --mint-soft:     rgba(0,168,133,.1);
+    --rose:          #e8446a;
+    --rose-soft:     rgba(232,68,106,.1);
+    --shadow:        0 2px 20px rgba(26,24,20,.07);
+    --shadow-hover:  0 8px 40px rgba(26,24,20,.13);
+    --nav-bg:        rgba(250,248,244,0.92);
+    --radius:        18px;
+    --cta-bg:        #1a1814;
+    --cert-user-bubble: var(--ink);
+    --cert-user-text:   white;
+  }
+
+  /* ══════════════════════════════════════
+     BASE
+  ══════════════════════════════════════ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    overflow-x: hidden;
+    transition: background .35s, color .35s;
+  }
+
+  /* ══════════════════════════════════════
+     THEME TOGGLE BUTTON
+  ══════════════════════════════════════ */
+  .theme-toggle {
+    position: relative;
+    width: 52px; height: 28px;
+    background: var(--border2);
+    border: none; border-radius: 50px;
+    cursor: pointer;
+    transition: background .3s;
+    flex-shrink: 0;
+  }
+  [data-theme="light"] .theme-toggle { background: var(--accent); }
+  .theme-toggle-thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  }
+  [data-theme="light"] .theme-toggle-thumb { transform: translateX(24px); }
+  .theme-toggle-thumb::before { content: '🌙'; }
+  [data-theme="light"] .theme-toggle-thumb::before { content: '☀️'; }
+
+  /* ══════════════════════════════════════
+     NAV
+  ══════════════════════════════════════ */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+    transition: background .35s, border-color .35s;
+  }
+  .nav-left  { display: flex; align-items: center; gap: 40px; }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 900; font-size: 22px; color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+    transition: color .35s;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--ink-soft);
+    font-size: 14px; font-weight: 500; transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 50px;
+    padding: 10px 22px; font-size: 14px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(108,143,255,.4); }
+
+  /* ══════════════════════════════════════
+     HERO
+  ══════════════════════════════════════ */
+  .hero {
+    padding: 100px 48px 80px;
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent-soft); color: var(--accent);
+    border: 1px solid rgba(108,143,255,.25);
+    border-radius: 50px; padding: 6px 14px;
+    font-size: 13px; font-weight: 600; margin-bottom: 24px;
+  }
+  .hero-tag::before { content: '✦'; font-size: 10px; }
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(42px, 5vw, 64px);
+    font-weight: 900; line-height: 1.05;
+    letter-spacing: -1px; margin-bottom: 20px;
+  }
+  .hero-title em { font-style: italic; font-weight: 300; color: var(--accent); }
+  .hero-sub {
+    color: var(--ink-mid); font-size: 17px; line-height: 1.7;
+    max-width: 420px; margin-bottom: 36px;
+  }
+  .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: white;
+    border: none; border-radius: 50px;
+    padding: 15px 32px; font-size: 16px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(108,143,255,.45); }
+  .btn-ghost {
+    background: transparent; color: var(--ink);
+    border: 1.5px solid var(--border2); border-radius: 50px;
+    padding: 14px 28px; font-size: 15px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color .2s, background .2s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .hero-stats {
+    display: flex; gap: 32px; margin-top: 40px; padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px; font-weight: 900; color: var(--ink);
+  }
+  .stat-label { font-size: 12px; color: var(--ink-soft); font-weight: 500; margin-top: 2px; }
+
+  /* Hero visual */
+  .hero-visual { position: relative; height: 480px; }
+  .hero-card-main {
+    position: absolute; top: 0; right: 0;
+    width: 340px; height: 380px;
+    background: var(--card); border-radius: 24px;
+    box-shadow: var(--shadow-hover); border: 1px solid var(--border);
+    overflow: hidden; transition: background .35s, border-color .35s;
+  }
+  .hero-card-main img { width: 100%; height: 220px; object-fit: cover; }
+  .hero-card-main-body { padding: 20px; }
+  .course-tag-pill {
+    background: var(--accent-soft); color: var(--accent);
+    border: 1px solid rgba(108,143,255,.2);
+    border-radius: 50px; padding: 4px 10px; font-size: 11px; font-weight: 600;
+    display: inline-block; margin-bottom: 10px;
+  }
+  .course-title-sm {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 16px;
+    line-height: 1.3; margin-bottom: 12px; color: var(--ink);
+  }
+  .progress-bar-wrap { background: var(--border); border-radius: 10px; height: 6px; }
+  .progress-bar-fill {
+    background: linear-gradient(90deg, var(--accent), var(--mint));
+    border-radius: 10px; height: 6px; animation: grow 1.5s ease forwards;
+  }
+  @keyframes grow { from { width: 0 } }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--ink-soft); margin-top: 6px;
+  }
+
+  .float-badge {
+    position: absolute;
+    background: var(--card2); border-radius: 16px;
+    box-shadow: var(--shadow-hover); border: 1px solid var(--border);
+    padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+    font-size: 13px; font-weight: 500;
+    animation: float 3s ease-in-out infinite;
+    transition: background .35s, border-color .35s;
+  }
+  .float-badge.badge-1 { bottom: 80px; left: 0; }
+  .float-badge.badge-2 { top: 60px; left: 20px; animation-delay: 1s; }
+  .float-badge.badge-3 { bottom: 10px; right: 20px; animation-delay: 1.5s; }
+  @keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
+  .badge-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .badge-icon.blue { background: var(--accent-soft); }
+  .badge-icon.gold { background: var(--gold-soft); }
+  .badge-icon.mint { background: var(--mint-soft); }
+
+  /* ══════════════════════════════════════
+     SECTION COMMONS
+  ══════════════════════════════════════ */
+  section { padding: 80px 48px; transition: background .35s; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 900; line-height: 1.1;
+    letter-spacing: -0.5px; margin-bottom: 16px; color: var(--ink);
+  }
+  .section-sub { color: var(--ink-mid); font-size: 16px; line-height: 1.7; max-width: 480px; }
+  .section-header { margin-bottom: 48px; }
+  .section-header-row {
+    display: flex; align-items: flex-end;
+    justify-content: space-between; margin-bottom: 48px;
+  }
+  .view-all {
+    color: var(--accent); text-decoration: none;
+    font-size: 14px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .view-all:hover { opacity: .75; }
+
+  /* ══════════════════════════════════════
+     CATALOG
+  ══════════════════════════════════════ */
+  #catalog { background: var(--surface); }
+  .course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .course-card {
+    background: var(--card); border-radius: var(--radius);
+    overflow: hidden; border: 1px solid var(--border);
+    transition: transform .25s, box-shadow .25s, background .35s, border-color .35s;
+    position: relative;
+  }
+  .course-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+  .course-card:hover .course-preview { opacity: 1; }
+  .course-thumb { width: 100%; height: 180px; object-fit: cover; display: block; }
+  .course-preview {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 180px;
+    background: rgba(0,0,0,.55);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .25s;
+  }
+  .play-btn {
+    width: 52px; height: 52px; background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .course-body { padding: 20px; }
+  .course-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .level-pill { font-size: 11px; font-weight: 600; border-radius: 50px; padding: 3px 10px; }
+  .level-pill.beginner    { background: var(--mint-soft); color: var(--mint); }
+  .level-pill.intermediate { background: var(--gold-soft); color: var(--gold); }
+  .level-pill.advanced    { background: var(--rose-soft); color: var(--rose); }
+  .course-rating { font-size: 12px; color: var(--ink-soft); }
+  .course-rating span { color: var(--gold); }
+  .course-card-title {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 17px; line-height: 1.35; margin-bottom: 8px; color: var(--ink);
+  }
+  .course-instructor { font-size: 12px; color: var(--ink-soft); margin-bottom: 16px; }
+  .course-progress-wrap { margin-bottom: 14px; }
+  .course-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-soft); margin-bottom: 5px; }
+  .c-bar { background: var(--border); border-radius: 10px; height: 5px; }
+  .c-bar-fill { border-radius: 10px; height: 5px; }
+  .c-bar-fill.blue { background: var(--accent); }
+  .c-bar-fill.gold { background: var(--gold); }
+  .c-bar-fill.mint { background: var(--mint); }
+  .c-bar-fill.rose { background: var(--rose); }
+  .course-footer { display: flex; align-items: center; justify-content: space-between; }
+  .course-price { font-family: 'Fraunces', serif; font-weight: 900; font-size: 18px; color: var(--ink); }
+  .course-enroll {
+    background: var(--accent); color: white;
+    border: none; border-radius: 50px;
+    padding: 8px 18px; font-size: 13px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif; transition: opacity .2s;
+  }
+  .course-enroll:hover { opacity: .8; }
+
+  /* ══════════════════════════════════════
+     LESSONS / FEATURES
+  ══════════════════════════════════════ */
+  #lessons { background: var(--bg); }
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .feature-card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 32px; border: 1px solid var(--border);
+    transition: transform .25s, box-shadow .25s, background .35s, border-color .35s;
+  }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .feature-icon {
+    width: 54px; height: 54px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 20px;
+  }
+  .feature-icon.blue { background: var(--accent-soft); }
+  .feature-icon.mint { background: var(--mint-soft); }
+  .feature-icon.gold { background: var(--gold-soft); }
+  .feature-icon.rose { background: var(--rose-soft); }
+  .feature-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 19px; margin-bottom: 10px; color: var(--ink); }
+  .feature-desc { color: var(--ink-mid); font-size: 14px; line-height: 1.7; }
+
+  .ai-chat-demo {
+    grid-column: span 2;
+    background: var(--card); border-radius: var(--radius);
+    padding: 32px; border: 1px solid var(--border);
+    transition: transform .25s, box-shadow .25s, background .35s, border-color .35s;
+  }
+  .ai-chat-demo:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .chat-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+  }
+  .chat-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--mint));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .chat-name { font-weight: 700; font-size: 15px; color: var(--ink); }
+  .chat-status { font-size: 12px; color: var(--mint); font-weight: 500; }
+  .chat-bubble-wrap { display: flex; flex-direction: column; gap: 12px; }
+  .chat-bubble {
+    max-width: 80%; padding: 12px 16px;
+    border-radius: 16px; font-size: 14px; line-height: 1.6;
+    transition: background .35s;
+  }
+  .chat-bubble.ai {
+    background: var(--card2); color: var(--ink);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px; align-self: flex-start;
+  }
+  .chat-bubble.user {
+    background: var(--cert-user-bubble); color: var(--cert-user-text);
+    border-bottom-right-radius: 4px; align-self: flex-end;
+  }
+  .chat-input-row {
+    display: flex; gap: 10px; margin-top: 20px;
+    padding-top: 16px; border-top: 1px solid var(--border);
+  }
+  .chat-input {
+    flex: 1; border: 1.5px solid var(--border); border-radius: 50px;
+    padding: 10px 18px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+    background: var(--bg); outline: none; color: var(--ink);
+    transition: border-color .2s, background .35s, color .35s;
+  }
+  .chat-input:focus { border-color: var(--accent); }
+  .chat-send {
+    background: var(--accent); color: white;
+    border: none; border-radius: 50px;
+    padding: 10px 20px; font-size: 14px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .chat-send:hover { opacity: .85; }
+
+  /* ══════════════════════════════════════
+     CERTIFICATION
+  ══════════════════════════════════════ */
+  #certs { background: var(--surface); }
+  .cert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+  .badges-wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .badge-card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 20px 16px; text-align: center;
+    border: 1px solid var(--border);
+    transition: transform .25s, box-shadow .25s, background .35s, border-color .35s;
+  }
+  .badge-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .badge-emoji { font-size: 36px; margin-bottom: 8px; display: block; }
+  .badge-name { font-size: 12px; font-weight: 600; color: var(--ink); }
+  .badge-sub  { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+
+  .cert-preview {
+    background: var(--card); border-radius: var(--radius);
+    border: 1px solid var(--border2); padding: 40px 36px;
+    text-align: center; position: relative; overflow: hidden;
+    transition: background .35s, border-color .35s;
+  }
+  .cert-preview::before {
+    content: ''; position: absolute; inset: 8px;
+    border: 1px solid var(--border); border-radius: 12px; pointer-events: none;
+    transition: border-color .35s;
+  }
+  .cert-seal {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--gold), #f9c74f);
+    border-radius: 50%; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; box-shadow: 0 4px 24px rgba(245,200,66,.4);
+  }
+  .cert-org { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-soft); font-weight: 700; margin-bottom: 20px; }
+  .cert-given { font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+  .cert-recipient { font-family: 'Fraunces', serif; font-style: italic; font-size: 26px; font-weight: 300; color: var(--ink); margin-bottom: 8px; }
+  .cert-course { font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; color: var(--ink); margin-bottom: 20px; }
+  .cert-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+  .cert-share {
+    background: var(--accent-soft); color: var(--accent);
+    border: 1px solid rgba(108,143,255,.2); border-radius: 50px;
+    padding: 10px 22px; font-size: 13px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: background .2s, color .2s;
+  }
+  .cert-share:hover { background: var(--accent); color: white; }
+
+  /* ══════════════════════════════════════
+     COMMUNITY
+  ══════════════════════════════════════ */
+  #community { background: var(--bg); }
+  .community-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .chat-room-card {
+    background: var(--card); border-radius: var(--radius);
+    border: 1px solid var(--border); overflow: hidden;
+    transition: transform .25s, box-shadow .25s, background .35s, border-color .35s;
+  }
+  .chat-room-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .chatroom-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .chatroom-name { font-weight: 700; font-size: 15px; color: var(--ink); }
+  .live-dot { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--rose); font-weight: 600; }
+  .live-dot::before { content: ''; width: 7px; height: 7px; background: var(--rose); border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .3 } }
+  .chatroom-messages { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+  .msg { display: flex; gap: 10px; align-items: flex-start; }
+  .msg-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .msg-name { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+  .msg-text { font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
+  .chatroom-input-row { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+  .chatroom-input {
+    flex: 1; border: 1.5px solid var(--border); border-radius: 50px;
+    padding: 8px 16px; font-size: 13px; background: var(--bg);
+    font-family: 'DM Sans', sans-serif; outline: none; color: var(--ink);
+    transition: border-color .2s, background .35s, color .35s;
+  }
+  .chatroom-input:focus { border-color: var(--accent); }
+  .chatroom-send { background: var(--accent); color: white; border: none; border-radius: 50px; padding: 8px 16px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; }
+
+  /* Leaderboard */
+  .leaderboard-card {
+    background: var(--card); border-radius: var(--radius);
+    border: 1px solid var(--border); overflow: hidden;
+    transition: transform .25s, box-shadow .25s, background .35s, border-color .35s;
+  }
+  .leaderboard-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .lb-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--ink); }
+  .lb-list { padding: 8px 0; }
+  .lb-item { display: flex; align-items: center; gap: 14px; padding: 12px 24px; transition: background .2s; }
+  .lb-item:hover { background: var(--card2); }
+  .lb-rank { width: 28px; text-align: center; font-family: 'Fraunces', serif; font-weight: 900; font-size: 15px; color: var(--ink-soft); }
+  .lb-rank.gold   { color: var(--gold); }
+  .lb-rank.silver { color: #a0a0b8; }
+  .lb-rank.bronze { color: #cd7f32; }
+  .lb-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+  .lb-name { font-weight: 600; font-size: 14px; flex: 1; color: var(--ink); }
+  .lb-pts { font-family: 'Fraunces', serif; font-weight: 700; font-size: 14px; color: var(--accent); }
+  .lb-bar-wrap { width: 80px; background: var(--border); border-radius: 10px; height: 5px; }
+  .lb-bar { height: 5px; border-radius: 10px; background: linear-gradient(90deg, var(--accent), var(--mint)); }
+
+  /* ══════════════════════════════════════
+     CTA + FOOTER
+  ══════════════════════════════════════ */
+  .cta-banner {
+    background: var(--cta-bg);
+    padding: 80px 48px; text-align: center;
+    transition: background .35s;
+  }
+  .cta-banner .section-title { color: #f0eee8; }
+  .cta-banner .section-sub   { color: rgba(240,238,232,.6); max-width: 480px; margin: 0 auto 36px; }
+  .btn-accent {
+    background: var(--accent); color: white;
+    border: none; border-radius: 50px;
+    padding: 16px 36px; font-size: 16px; font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-accent:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,143,255,.4); }
+
+  footer {
+    background: var(--bg); border-top: 1px solid var(--border);
+    padding: 40px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background .35s, border-color .35s;
+  }
+  .footer-logo { font-family: 'Fraunces', serif; font-weight: 900; font-size: 18px; color: var(--ink); }
+  .footer-logo span { color: var(--accent); }
+  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links a { text-decoration: none; color: var(--ink-soft); font-size: 13px; transition: color .2s; }
+  .footer-links a:hover { color: var(--ink); }
+  .footer-copy { font-size: 12px; color: var(--ink-soft); }
+
+  /* ══════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════ */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 60px 24px 40px; gap: 40px; }
+    .hero-visual { height: 280px; }
+    .hero-card-main { width: 260px; height: 300px; }
+    .hero-card-main img { height: 160px; }
+    .float-badge.badge-2 { display: none; }
+    section { padding: 60px 24px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .ai-chat-demo { grid-column: span 1; }
+    .cert-grid, .community-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+    .cta-banner { padding: 60px 24px; }
+    .section-header-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-logo">Learn<span>Sphere</span></div>
+    <ul class="nav-links">
+      <li><a href="#catalog">Courses</a></li>
+      <li><a href="#lessons">Lessons</a></li>
+      <li><a href="#certs">Certificates</a></li>
+      <li><a href="#community">Community</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <div class="theme-toggle-thumb"></div>
+    </button>
+    <button class="nav-cta">Start Learning</button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section style="padding:0;background:var(--bg);">
+  <div class="hero">
+    <div>
+      <div class="hero-tag">New Season Courses Available</div>
+      <h1 class="hero-title">Learn<br><em>Without</em><br>Limits.</h1>
+      <p class="hero-sub">Discover thousands of courses taught by world-class instructors. Learn at your pace, earn real certificates, and join a global community of learners.</p>
+      <div class="hero-actions">
+        <button class="btn-primary">Start Learning →</button>
+        <button class="btn-ghost">Browse Catalog</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num">42K+</div><div class="stat-label">Active Learners</div></div>
+        <div><div class="stat-num">1,200</div><div class="stat-label">Courses</div></div>
+        <div><div class="stat-num">98%</div><div class="stat-label">Satisfaction</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-main">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=700&auto=format&fit=crop" alt="Course preview">
+        <div class="hero-card-main-body">
+          <span class="course-tag-pill">UI/UX Design</span>
+          <div class="course-title-sm">Advanced Design Systems & Prototyping</div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:68%"></div></div>
+          <div class="progress-label"><span>Progress</span><span>68% done</span></div>
+        </div>
+      </div>
+      <div class="float-badge badge-1">
+        <div class="badge-icon gold">🏆</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink)">Top Rated</div>
+          <div style="font-size:11px;color:var(--ink-soft)">5.0 stars · 2.4k reviews</div>
+        </div>
+      </div>
+      <div class="float-badge badge-2">
+        <div class="badge-icon blue">🎓</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink)">Certified</div>
+          <div style="font-size:11px;color:var(--ink-soft)">Industry recognized</div>
+        </div>
+      </div>
+      <div class="float-badge badge-3">
+        <div class="badge-icon mint">✦</div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink)">+320 pts earned</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CATALOG ══ -->
+<section id="catalog">
+  <div class="section-inner">
+    <div class="section-header-row">
+      <div>
+        <div class="section-label">Course Catalog</div>
+        <h2 class="section-title">Explore Top Courses</h2>
+      </div>
+      <a href="#" class="view-all">View all courses →</a>
+    </div>
+    <div class="course-grid">
+      <div class="course-card">
+        <img class="course-thumb" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop" alt="Web Dev">
+        <div class="course-preview"><div class="play-btn">▶</div></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="level-pill beginner">Beginner</span><span class="course-rating"><span>★★★★★</span> 4.9</span></div>
+          <div class="course-card-title">Full Stack Web Development Bootcamp</div>
+          <div class="course-instructor">by Sarah Chen · 48 lessons</div>
+          <div class="course-progress-wrap">
+            <div class="course-progress-label"><span>Progress</span><span>42%</span></div>
+            <div class="c-bar"><div class="c-bar-fill blue" style="width:42%"></div></div>
+          </div>
+          <div class="course-footer"><div class="course-price">$49</div><button class="course-enroll">Continue</button></div>
+        </div>
+      </div>
+      <div class="course-card">
+        <img class="course-thumb" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop" alt="Data Science">
+        <div class="course-preview"><div class="play-btn">▶</div></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="level-pill intermediate">Intermediate</span><span class="course-rating"><span>★★★★★</span> 4.8</span></div>
+          <div class="course-card-title">Data Science & Machine Learning</div>
+          <div class="course-instructor">by Dr. James Liu · 62 lessons</div>
+          <div class="course-progress-wrap">
+            <div class="course-progress-label"><span>Progress</span><span>75%</span></div>
+            <div class="c-bar"><div class="c-bar-fill gold" style="width:75%"></div></div>
+          </div>
+          <div class="course-footer"><div class="course-price">$79</div><button class="course-enroll">Continue</button></div>
+        </div>
+      </div>
+      <div class="course-card">
+        <img class="course-thumb" src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop" alt="Design">
+        <div class="course-preview"><div class="play-btn">▶</div></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="level-pill beginner">Beginner</span><span class="course-rating"><span>★★★★☆</span> 4.7</span></div>
+          <div class="course-card-title">UI/UX Design Fundamentals</div>
+          <div class="course-instructor">by Mia Rodriguez · 35 lessons</div>
+          <div class="course-progress-wrap">
+            <div class="course-progress-label"><span>Progress</span><span>18%</span></div>
+            <div class="c-bar"><div class="c-bar-fill mint" style="width:18%"></div></div>
+          </div>
+          <div class="course-footer"><div class="course-price">$39</div><button class="course-enroll">Enroll</button></div>
+        </div>
+      </div>
+      <div class="course-card">
+        <img class="course-thumb" src="https://images.unsplash.com/photo-1544654803-b69140b285a1?w=600&auto=format&fit=crop" alt="Python">
+        <div class="course-preview"><div class="play-btn">▶</div></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="level-pill advanced">Advanced</span><span class="course-rating"><span>★★★★★</span> 5.0</span></div>
+          <div class="course-card-title">Python for AI & Automation</div>
+          <div class="course-instructor">by Alex Park · 54 lessons</div>
+          <div class="course-progress-wrap">
+            <div class="course-progress-label"><span>Progress</span><span>91%</span></div>
+            <div class="c-bar"><div class="c-bar-fill rose" style="width:91%"></div></div>
+          </div>
+          <div class="course-footer"><div class="course-price">$89</div><button class="course-enroll">Continue</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LESSONS ══ -->
+<section id="lessons">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Learning Experience</div>
+      <h2 class="section-title">Next-gen lessons,<br>built for you.</h2>
+      <p class="section-sub">Immersive lessons designed to keep you engaged — from gamified quizzes to a live AI tutor available 24/7.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon blue">🥽</div>
+        <div class="feature-title">VR Classrooms</div>
+        <p class="feature-desc">Step into immersive virtual environments. Learn anatomy, engineering, or history in a fully 3D, interactive classroom with avatar peers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon gold">🎮</div>
+        <div class="feature-title">Gamified Modules</div>
+        <p class="feature-desc">Earn points, unlock badges, and level up as you complete lessons. Streaks and leaderboards keep motivation high every single day.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon mint">📊</div>
+        <div class="feature-title">Progress Analytics</div>
+        <p class="feature-desc">Detailed breakdowns of your strengths and weak spots. Smart recommendations adapt future lessons to close your knowledge gaps.</p>
+      </div>
+      <div class="ai-chat-demo">
+        <div class="feature-icon rose" style="margin-bottom:16px">🤖</div>
+        <div class="feature-title" style="margin-bottom:4px">AI Tutor — Always On</div>
+        <p class="feature-desc" style="margin-bottom:20px">Ask anything, get step-by-step guidance tailored to where you are in your course.</p>
+        <div class="chat-header">
+          <div class="chat-avatar">🤖</div>
+          <div><div class="chat-name">Aria — AI Tutor</div><div class="chat-status">● Online now</div></div>
+        </div>
+        <div class="chat-bubble-wrap">
+          <div class="chat-bubble ai">Hey! I noticed you paused at the recursion section. Would you like me to walk you through it with a simpler example? 😊</div>
+          <div class="chat-bubble user">Yes please, I'm confused about the base case.</div>
+          <div class="chat-bubble ai">No worries! Think of it like this: the base case is the "stop" rule. For factorial(0), we just return 1. Without it, the function would call itself forever…</div>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" placeholder="Ask Aria anything…" type="text">
+          <button class="chat-send">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CERTS ══ -->
+<section id="certs">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Certification Dashboard</div>
+      <h2 class="section-title">Earn. Display. Share.</h2>
+      <p class="section-sub">Every course you complete unlocks a verified digital badge and shareable certificate — recognized by leading employers worldwide.</p>
+    </div>
+    <div class="cert-grid">
+      <div>
+        <p style="font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">My Badge Portfolio</p>
+        <div class="badges-wall">
+          <div class="badge-card"><span class="badge-emoji">🏆</span><div class="badge-name">Gold Achiever</div><div class="badge-sub">Top 1%</div></div>
+          <div class="badge-card"><span class="badge-emoji">💻</span><div class="badge-name">Dev Expert</div><div class="badge-sub">Full Stack</div></div>
+          <div class="badge-card"><span class="badge-emoji">🎨</span><div class="badge-name">Designer</div><div class="badge-sub">UI/UX</div></div>
+          <div class="badge-card"><span class="badge-emoji">🔥</span><div class="badge-name">30-Day Streak</div><div class="badge-sub">Consistent</div></div>
+          <div class="badge-card"><span class="badge-emoji">🤖</span><div class="badge-name">AI Fluent</div><div class="badge-sub">ML Track</div></div>
+          <div class="badge-card"><span class="badge-emoji">⭐</span><div class="badge-name">5-Star Learner</div><div class="badge-sub">Top Rated</div></div>
+        </div>
+      </div>
+      <div class="cert-preview">
+        <div class="cert-seal">🎓</div>
+        <div class="cert-org">LearnSphere · Verified Certificate</div>
+        <div class="cert-given">This certificate is proudly awarded to</div>
+        <div class="cert-recipient">Alexandra Kim</div>
+        <div class="cert-course">Full Stack Web Development Bootcamp</div>
+        <hr class="cert-divider">
+        <p style="font-size:12px;color:var(--ink-soft);margin-bottom:20px;">Issued March 2026 · Credential ID: LS-88241</p>
+        <button class="cert-share">🔗 Share Certificate</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMMUNITY ══ -->
+<section id="community">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Community</div>
+      <h2 class="section-title">Learn together,<br>grow faster.</h2>
+      <p class="section-sub">Join live discussions, ask questions, and connect with fellow learners from over 80 countries.</p>
+    </div>
+    <div class="community-grid">
+      <div class="chat-room-card">
+        <div class="chatroom-header">
+          <div class="chatroom-name"># web-dev-lounge</div>
+          <div class="live-dot">LIVE · 142 online</div>
+        </div>
+        <div class="chatroom-messages">
+          <div class="msg">
+            <div class="msg-avatar" style="background:var(--accent-soft)">🧑‍💻</div>
+            <div class="msg-body"><div class="msg-name">Riya M.</div><div class="msg-text">Just deployed my first Next.js app! 🎉 Thanks everyone for the help with the routing issue.</div></div>
+          </div>
+          <div class="msg">
+            <div class="msg-avatar" style="background:var(--mint-soft)">👩‍🎓</div>
+            <div class="msg-body"><div class="msg-name">Carlos V.</div><div class="msg-text">That's awesome! Did you use the API routes for the backend or a separate Express server?</div></div>
+          </div>
+          <div class="msg">
+            <div class="msg-avatar" style="background:var(--gold-soft)">🧑‍🏫</div>
+            <div class="msg-body"><div class="msg-name">Instructor Jamie</div><div class="msg-text">Great work Riya! Drop the link when you're ready — I'll feature it in tomorrow's session ✨</div></div>
+          </div>
+        </div>
+        <div class="chatroom-input-row">
+          <input class="chatroom-input" placeholder="Say something…" type="text">
+          <button class="chatroom-send">Send</button>
+        </div>
+      </div>
+      <div class="leaderboard-card">
+        <div class="lb-header"><span class="lb-icon">🏆</span>Top Learners This Week</div>
+        <div class="lb-list">
+          <div class="lb-item"><div class="lb-rank gold">1</div><div class="lb-avatar" style="background:var(--gold-soft)">👩‍💻</div><div class="lb-name">Priya S.</div><div class="lb-bar-wrap"><div class="lb-bar" style="width:100%"></div></div><div class="lb-pts">2,480 pts</div></div>
+          <div class="lb-item"><div class="lb-rank silver">2</div><div class="lb-avatar" style="background:var(--accent-soft)">🧑‍🔬</div><div class="lb-name">Marcus L.</div><div class="lb-bar-wrap"><div class="lb-bar" style="width:85%"></div></div><div class="lb-pts">2,105 pts</div></div>
+          <div class="lb-item"><div class="lb-rank bronze">3</div><div class="lb-avatar" style="background:var(--mint-soft)">👨‍🎨</div><div class="lb-name">Aiko T.</div><div class="lb-bar-wrap"><div class="lb-bar" style="width:72%"></div></div><div class="lb-pts">1,790 pts</div></div>
+          <div class="lb-item"><div class="lb-rank">4</div><div class="lb-avatar" style="background:var(--rose-soft)">🧑‍💼</div><div class="lb-name">Dev R.</div><div class="lb-bar-wrap"><div class="lb-bar" style="width:60%"></div></div><div class="lb-pts">1,490 pts</div></div>
+          <div class="lb-item"><div class="lb-rank">5</div><div class="lb-avatar" style="background:var(--card2)">🧑‍🚀</div><div class="lb-name">Sofia M.</div><div class="lb-bar-wrap"><div class="lb-bar" style="width:48%"></div></div><div class="lb-pts">1,190 pts</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<div class="cta-banner">
+  <div class="section-label" style="color:rgba(240,238,232,.4)">Ready to begin?</div>
+  <h2 class="section-title">Your future starts today.</h2>
+  <p class="section-sub">Join 42,000+ learners who are already building skills that matter. First 7 days completely free.</p>
+  <button class="btn-accent">Start Learning for Free →</button>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-logo">Learn<span>Sphere</span></div>
+  <ul class="footer-links">
+    <li><a href="#">About</a></li>
+    <li><a href="#">Courses</a></li>
+    <li><a href="#">For Business</a></li>
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 LearnSphere. All rights reserved.</div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const html   = document.documentElement;
+
+  // Persist preference
+  const saved = localStorage.getItem('ls-theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+
+  toggle.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next    = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('ls-theme', next);
+  });
+</script>
+</body>
+</html>
